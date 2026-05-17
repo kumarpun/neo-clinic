@@ -43,6 +43,7 @@ export default function SalesPage() {
   const [customerName, setCustomerName] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [customerAge, setCustomerAge] = useState("");
+  const [customerGender, setCustomerGender] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [editDiscountPercent, setEditDiscountPercent] = useState("");
   const [editCustomerPay, setEditCustomerPay] = useState("");
@@ -76,6 +77,7 @@ export default function SalesPage() {
     setCustomerName(bill.customerName || "");
     setCustomerAddress(bill.customerAddress || "");
     setCustomerAge(bill.customerAge || "");
+    setCustomerGender(bill.customerGender || "");
     setCustomerPhone(bill.customerPhone || "");
     setEditDiscountPercent(bill.discountPercent ? String(bill.discountPercent) : "");
     setEditCustomerPay(bill.customerPay != null ? String(bill.customerPay) : "");
@@ -103,6 +105,7 @@ export default function SalesPage() {
     setCustomerName("");
     setCustomerAddress("");
     setCustomerAge("");
+    setCustomerGender("");
     setCustomerPhone("");
     setEditDiscountPercent("");
     setEditCustomerPay("");
@@ -170,6 +173,7 @@ export default function SalesPage() {
           customerName,
           customerAddress,
           customerAge,
+          customerGender,
           customerPhone,
           discountPercent: editPct,
           customerPay: editPayNum,
@@ -491,6 +495,16 @@ export default function SalesPage() {
                       onChange={(e) => setCustomerAge(e.target.value)}
                       className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
                     />
+                    <select
+                      value={customerGender}
+                      onChange={(e) => setCustomerGender(e.target.value)}
+                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                    >
+                      <option value="">Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
 
                   <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">

@@ -75,6 +75,7 @@ export async function PUT(request, { params }) {
       customerName,
       customerAddress,
       customerAge,
+      customerGender,
       customerPhone,
       items,
       discountPercent,
@@ -156,6 +157,7 @@ export async function PUT(request, { params }) {
     oldBill.customerName = customerName || "";
     oldBill.customerAddress = customerAddress || "";
     oldBill.customerAge = customerAge || "";
+    oldBill.customerGender = customerGender || "";
     oldBill.customerPhone = customerPhone || "";
     oldBill.items = billItems;
     oldBill.subtotal = subtotal;

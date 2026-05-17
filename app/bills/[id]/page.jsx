@@ -69,37 +69,37 @@ export default function BillDetailPage() {
 
   function BillCopy({ label }) {
     return (
-      <div className="mx-auto max-w-2xl rounded-xl border border-zinc-200 bg-white p-4 sm:p-8 dark:border-zinc-800 dark:bg-zinc-900 print:border-none print:p-2 print:shadow-none print:break-inside-avoid">
+      <div className="mx-auto max-w-2xl rounded-xl border border-zinc-200 bg-white p-4 sm:p-8 dark:border-zinc-800 dark:bg-zinc-900 print:border-none print:p-1 print:shadow-none print:break-inside-avoid print:text-xs">
         {label && (
-          <div className="hidden print:block text-right text-[10px] font-semibold uppercase tracking-widest text-gray-600 mb-1">
+          <div className="hidden print:block text-right text-[9px] font-semibold uppercase tracking-widest text-gray-600 mb-0.5">
             {label}
           </div>
         )}
         {/* Header */}
-        <div className="relative border-b border-zinc-200 pb-4 mb-4 dark:border-zinc-700 print:border-black print:pb-2 print:mb-2">
+        <div className="relative border-b border-zinc-200 pb-4 mb-4 dark:border-zinc-700 print:border-black print:pb-1 print:mb-1">
           <img
             src="/logo.jpg"
             alt="Butwal Neo Clinic"
-            className="absolute left-0 top-0 h-24 w-auto object-contain print:h-20"
+            className="absolute left-0 top-0 h-24 w-auto object-contain print:h-12"
           />
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 print:text-black print:text-xl">
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 print:text-black print:text-base print:leading-tight">
               Butwal Neo Clinic
             </h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-300 print:text-black">
+            <p className="text-sm text-zinc-600 dark:text-zinc-300 print:text-black print:text-[10px] print:leading-tight">
               Dharmapath-8, Sukkhanagar, Butwal
             </p>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 print:text-gray-600">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 print:text-gray-600 print:text-[10px] print:leading-tight">
               butwalneoclinic@gmail.com
             </p>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 print:text-gray-600">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 print:text-gray-600 print:text-[10px] print:leading-tight">
               PAN: 133660229
             </p>
           </div>
         </div>
 
         {/* Bill info */}
-        <div className="flex justify-between text-sm mb-6 print:mb-3">
+        <div className="flex justify-between text-sm mb-6 print:mb-1 print:text-[10px] print:leading-tight">
           <div>
             <p className="text-zinc-500 dark:text-zinc-400 print:text-gray-500">
               Bill No:{" "}
@@ -128,6 +128,14 @@ export default function BillDetailPage() {
                 Age:{" "}
                 <span className="font-medium text-zinc-900 dark:text-zinc-50 print:text-black">
                   {bill.customerAge}
+                </span>
+              </p>
+            )}
+            {bill.customerGender && (
+              <p className="text-zinc-500 dark:text-zinc-400 print:text-gray-500">
+                Gender:{" "}
+                <span className="font-medium text-zinc-900 dark:text-zinc-50 print:text-black">
+                  {bill.customerGender}
                 </span>
               </p>
             )}
@@ -160,22 +168,22 @@ export default function BillDetailPage() {
         </div>
 
         {/* Items table */}
-        <table className="w-full text-sm mb-4 print:mb-2">
+        <table className="w-full text-sm mb-4 print:mb-1 print:text-[10px]">
           <thead>
             <tr className="border-b-2 border-zinc-300 dark:border-zinc-600 print:border-black">
-              <th className="py-2 text-left font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-1">
+              <th className="py-2 text-left font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-0.5">
                 #
               </th>
-              <th className="py-2 text-left font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-1">
-                Item
+              <th className="py-2 text-left font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-0.5">
+                Particulars
               </th>
-              <th className="py-2 text-right font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-1">
+              <th className="py-2 text-right font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-0.5">
                 Qty
               </th>
-              <th className="py-2 text-right font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-1">
+              <th className="py-2 text-right font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-0.5">
                 Price
               </th>
-              <th className="py-2 text-right font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-1">
+              <th className="py-2 text-right font-semibold text-zinc-700 dark:text-zinc-300 print:text-black print:py-0.5">
                 Amount
               </th>
             </tr>
@@ -186,19 +194,19 @@ export default function BillDetailPage() {
                 key={i}
                 className="border-b border-zinc-100 dark:border-zinc-800 print:border-gray-300"
               >
-                <td className="py-2 text-zinc-500 dark:text-zinc-400 print:text-gray-600 print:py-1">
+                <td className="py-2 text-zinc-500 dark:text-zinc-400 print:text-gray-600 print:py-0.5">
                   {i + 1}
                 </td>
-                <td className="py-2 text-zinc-900 dark:text-zinc-50 print:text-black print:py-1">
+                <td className="py-2 text-zinc-900 dark:text-zinc-50 print:text-black print:py-0.5">
                   {item.productName}
                 </td>
-                <td className="py-2 text-right text-zinc-700 dark:text-zinc-300 print:text-black print:py-1">
+                <td className="py-2 text-right text-zinc-700 dark:text-zinc-300 print:text-black print:py-0.5">
                   {item.quantity}
                 </td>
-                <td className="py-2 text-right text-zinc-700 dark:text-zinc-300 print:text-black print:py-1">
+                <td className="py-2 text-right text-zinc-700 dark:text-zinc-300 print:text-black print:py-0.5">
                   Rs. {item.productPrice.toFixed(2)}
                 </td>
-                <td className="py-2 text-right font-medium text-zinc-900 dark:text-zinc-50 print:text-black print:py-1">
+                <td className="py-2 text-right font-medium text-zinc-900 dark:text-zinc-50 print:text-black print:py-0.5">
                   Rs. {item.amount.toFixed(2)}
                 </td>
               </tr>
@@ -207,36 +215,36 @@ export default function BillDetailPage() {
         </table>
 
         {/* Total */}
-        <div className="flex justify-end border-t-2 border-zinc-300 pt-3 dark:border-zinc-600 print:border-black print:pt-2">
-          <div className="text-right space-y-1 min-w-[200px]">
+        <div className="flex justify-end border-t-2 border-zinc-300 pt-3 dark:border-zinc-600 print:border-black print:pt-1">
+          <div className="text-right space-y-1 min-w-[200px] print:space-y-0 print:text-[10px]">
             {(bill.discountPercent ?? 0) > 0 && (
               <>
-                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
+                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700 print:text-[10px]">
                   <span>Subtotal:</span>
                   <span>Rs. {(bill.subtotal ?? bill.totalAmount).toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
+                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700 print:text-[10px]">
                   <span>Discount ({bill.discountPercent}%):</span>
                   <span>− Rs. {(bill.discountAmount ?? 0).toFixed(2)}</span>
                 </div>
               </>
             )}
-            <div className="flex justify-between border-t border-zinc-300 pt-1 dark:border-zinc-600 print:border-black">
-              <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50 print:text-black">
+            <div className="flex justify-between border-t border-zinc-300 pt-1 dark:border-zinc-600 print:border-black print:pt-0.5">
+              <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50 print:text-black print:text-xs">
                 Total:
               </span>
-              <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50 print:text-black">
+              <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50 print:text-black print:text-xs">
                 Rs. {bill.totalAmount.toFixed(2)}
               </span>
             </div>
             {bill.customerPay != null && (
               <>
-                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
+                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700 print:text-[10px]">
                   <span>Paid:</span>
                   <span>Rs. {Number(bill.customerPay).toFixed(2)}</span>
                 </div>
                 {+(bill.totalAmount - bill.customerPay).toFixed(2) > 0 && (
-                  <div className="flex justify-between text-sm font-semibold text-orange-700 dark:text-orange-400 print:text-black">
+                  <div className="flex justify-between text-sm font-semibold text-orange-700 dark:text-orange-400 print:text-black print:text-[10px]">
                     <span>Balance Due:</span>
                     <span>Rs. {(bill.totalAmount - bill.customerPay).toFixed(2)}</span>
                   </div>
@@ -247,7 +255,7 @@ export default function BillDetailPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-center text-xs text-zinc-400 dark:text-zinc-500 print:text-gray-500 print:mt-3">
+        <div className="mt-8 text-center text-xs text-zinc-400 dark:text-zinc-500 print:text-gray-500 print:mt-1 print:text-[9px]">
           <p>We wish you good health</p>
         </div>
       </div>
@@ -314,7 +322,7 @@ export default function BillDetailPage() {
       {/* Print-only: two copies on same page */}
       <div className="hidden print:block">
         <BillCopy label="Customer Copy" />
-        <div className="my-10 border-t border-dashed border-gray-500 pt-2 text-center text-[10px] text-gray-500">
+        <div className="my-2 border-t border-dashed border-gray-500 pt-1 text-center text-[9px] text-gray-500">
           — — — — — — — — — — — — cut here — — — — — — — — — — — —
         </div>
         <BillCopy label="Office Copy" />

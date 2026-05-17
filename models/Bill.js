@@ -17,6 +17,7 @@ const billSchema = new mongoose.Schema(
     customerName: { type: String, default: "", trim: true },
     customerAddress: { type: String, default: "", trim: true },
     customerAge: { type: String, default: "", trim: true },
+    customerGender: { type: String, default: "", trim: true },
     customerPhone: { type: String, default: "", trim: true },
     items: { type: [billItemSchema], required: true },
     subtotal: { type: Number, default: 0 },
