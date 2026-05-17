@@ -104,6 +104,7 @@ export default function Nav() {
     { href: "/bills", label: "Bills" },
     { href: "/sales", label: "Sales" },
     { href: "/follow-up", label: "Follow Up" },
+    { href: "/expense", label: "Expenses" },
   ];
 
   return (

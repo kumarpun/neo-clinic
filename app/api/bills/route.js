@@ -51,7 +51,15 @@ export async function POST(request) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { customerName, items, discountPercent, extraDiscount } = await request.json();
+    const {
+      customerName,
+      customerAddress,
+      customerAge,
+      customerPhone,
+      items,
+      discountPercent,
+      customerPay,
+    } = await request.json();
 
     if (!items || items.length === 0) {
       return NextResponse.json(
@@ -111,11 +119,7 @@ export async function POST(request) {
     const subtotal = +billItems.reduce((sum, i) => sum + i.amount, 0).toFixed(2);
     const pct = Math.min(Math.max(Number(discountPercent) || 0, 0), 100);
     const discountAmount = +(subtotal * pct / 100).toFixed(2);
-    const extra = Math.max(0, Number(extraDiscount) || 0);
-    const totalAmount = Math.max(
-      0,
-      +(subtotal - discountAmount - extra).toFixed(2)
-    );
+    const totalAmount = Math.max(0, +(subtotal - discountAmount).toFixed(2));
 
     const [counter] = await Promise.all([
       Counter.findOneAndUpdate(
@@ -126,15 +130,23 @@ export async function POST(request) {
       Product.bulkWrite(stockOps, { ordered: false }),
     ]);
 
+    const payVal =
+      customerPay != null && !Number.isNaN(Number(customerPay))
+        ? Math.max(0, Number(customerPay))
+        : null;
+
     const bill = await Bill.create({
       billNumber: counter.seq,
       customerName: customerName || "",
+      customerAddress: customerAddress || "",
+      customerAge: customerAge || "",
+      customerPhone: customerPhone || "",
       items: billItems,
       subtotal,
       discountPercent: pct,
       discountAmount,
-      extraDiscount: extra,
       totalAmount,
+      customerPay: payVal,
       createdBy: user.userId,
     });
 

@@ -9,8 +9,11 @@ export default function BillingPage() {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+  const [customerAge, setCustomerAge] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [discountPercent, setDiscountPercent] = useState("");
-  const [extraDiscount, setExtraDiscount] = useState("");
+  const [customerPay, setCustomerPay] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
@@ -78,8 +81,9 @@ export default function BillingPage() {
   );
   const pct = Math.min(Math.max(Number(discountPercent) || 0, 0), 100);
   const discountAmount = (subtotal * pct) / 100;
-  const extra = Math.max(0, Number(extraDiscount) || 0);
-  const total = Math.max(0, subtotal - discountAmount - extra);
+  const total = Math.max(0, subtotal - discountAmount);
+  const payNum = customerPay === "" ? null : Math.max(0, Number(customerPay) || 0);
+  const balance = payNum != null ? +(total - payNum).toFixed(2) : 0;
 
   async function handleGenerateBill() {
     if (cart.length === 0) return;
@@ -91,8 +95,11 @@ export default function BillingPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerName,
+          customerAddress,
+          customerAge,
+          customerPhone,
           discountPercent: pct,
-          extraDiscount: extra,
+          customerPay: payNum,
           items: cart.map((c) => ({
             productId: c.productId,
             quantity: c.quantity,
@@ -159,7 +166,7 @@ export default function BillingPage() {
                         {p.name}
                       </p>
                       <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                        Rs. {p.price.toFixed(2)} / {p.unit} — Stock: {p.stock}
+                        Rs. {p.price.toFixed(2)} / {p.unit}
                       </p>
                     </div>
                     <button
@@ -181,13 +188,36 @@ export default function BillingPage() {
                 Order
               </h2>
 
-              <input
-                type="text"
-                placeholder="Customer name (optional)"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                className="mb-4 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
-              />
+              <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                />
+                <input
+                  type="text"
+                  placeholder="Phone"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                />
+                <input
+                  type="text"
+                  placeholder="Address"
+                  value={customerAddress}
+                  onChange={(e) => setCustomerAddress(e.target.value)}
+                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                />
+                <input
+                  type="text"
+                  placeholder="Age"
+                  value={customerAge}
+                  onChange={(e) => setCustomerAge(e.target.value)}
+                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                />
+              </div>
 
               {cart.length === 0 && (
                 <p className="py-6 text-center text-sm text-zinc-400">
@@ -277,29 +307,6 @@ export default function BillingPage() {
                         <span>− Rs. {discountAmount.toFixed(2)}</span>
                       </div>
                     )}
-                    <div className="flex items-center justify-between gap-2">
-                      <label className="text-sm text-zinc-600 dark:text-zinc-400">
-                        Extra Discount
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-zinc-500">Rs.</span>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          placeholder="0"
-                          value={extraDiscount}
-                          onChange={(e) => setExtraDiscount(e.target.value)}
-                          className="w-24 rounded border border-zinc-300 px-2 py-1 text-right text-sm text-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
-                        />
-                      </div>
-                    </div>
-                    {extra > 0 && (
-                      <div className="flex items-center justify-between text-sm text-red-600 dark:text-red-400">
-                        <span>Extra Discount</span>
-                        <span>− Rs. {extra.toFixed(2)}</span>
-                      </div>
-                    )}
                     <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-zinc-800">
                       <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">
                         Total
@@ -308,6 +315,29 @@ export default function BillingPage() {
                         Rs. {total.toFixed(2)}
                       </span>
                     </div>
+                    <div className="flex items-center justify-between gap-2 pt-2">
+                      <label className="text-sm text-zinc-600 dark:text-zinc-400">
+                        Customer Pay
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-zinc-500">Rs.</span>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          placeholder="full"
+                          value={customerPay}
+                          onChange={(e) => setCustomerPay(e.target.value)}
+                          className="w-24 rounded border border-zinc-300 px-2 py-1 text-right text-sm text-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                        />
+                      </div>
+                    </div>
+                    {payNum != null && balance > 0 && (
+                      <div className="flex items-center justify-between text-sm text-orange-600 dark:text-orange-400">
+                        <span>Balance Due</span>
+                        <span>Rs. {balance.toFixed(2)}</span>
+                      </div>
+                    )}
                   </div>
                   <button
                     onClick={handleGenerateBill}

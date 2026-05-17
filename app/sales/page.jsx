@@ -41,8 +41,11 @@ export default function SalesPage() {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+  const [customerAge, setCustomerAge] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [editDiscountPercent, setEditDiscountPercent] = useState("");
-  const [editExtraDiscount, setEditExtraDiscount] = useState("");
+  const [editCustomerPay, setEditCustomerPay] = useState("");
   const [saving, setSaving] = useState(false);
 
   function fetchSales() {
@@ -71,8 +74,11 @@ export default function SalesPage() {
   function startEdit(bill) {
     setEditingId(bill._id);
     setCustomerName(bill.customerName || "");
+    setCustomerAddress(bill.customerAddress || "");
+    setCustomerAge(bill.customerAge || "");
+    setCustomerPhone(bill.customerPhone || "");
     setEditDiscountPercent(bill.discountPercent ? String(bill.discountPercent) : "");
-    setEditExtraDiscount(bill.extraDiscount ? String(bill.extraDiscount) : "");
+    setEditCustomerPay(bill.customerPay != null ? String(bill.customerPay) : "");
     setCart(
       bill.items.map((item) => ({
         productId: item.productId,
@@ -95,8 +101,11 @@ export default function SalesPage() {
     setEditingId(null);
     setCart([]);
     setCustomerName("");
+    setCustomerAddress("");
+    setCustomerAge("");
+    setCustomerPhone("");
     setEditDiscountPercent("");
-    setEditExtraDiscount("");
+    setEditCustomerPay("");
     setSearch("");
   }
 
@@ -146,8 +155,9 @@ export default function SalesPage() {
   );
   const editPct = Math.min(Math.max(Number(editDiscountPercent) || 0, 0), 100);
   const editDiscountAmount = (cartSubtotal * editPct) / 100;
-  const editExtra = Math.max(0, Number(editExtraDiscount) || 0);
-  const cartTotal = Math.max(0, cartSubtotal - editDiscountAmount - editExtra);
+  const cartTotal = Math.max(0, cartSubtotal - editDiscountAmount);
+  const editPayNum = editCustomerPay === "" ? null : Math.max(0, Number(editCustomerPay) || 0);
+  const editBalance = editPayNum != null ? +(cartTotal - editPayNum).toFixed(2) : 0;
 
   async function handleSave() {
     if (cart.length === 0) return;
@@ -158,8 +168,11 @@ export default function SalesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerName,
+          customerAddress,
+          customerAge,
+          customerPhone,
           discountPercent: editPct,
-          extraDiscount: editExtra,
+          customerPay: editPayNum,
           items: cart.map((c) => ({
             productId: c.productId,
             quantity: c.quantity,
@@ -341,7 +354,7 @@ export default function SalesPage() {
               <thead>
                 <tr className="border-b border-zinc-200 dark:border-zinc-800">
                   <th className="px-4 py-3 text-left font-medium text-zinc-500 dark:text-zinc-400">Bill #</th>
-                  <th className="px-4 py-3 text-left font-medium text-zinc-500 dark:text-zinc-400">Customer</th>
+                  <th className="px-4 py-3 text-left font-medium text-zinc-500 dark:text-zinc-400">Name</th>
                   <th className="px-4 py-3 text-right font-medium text-zinc-500 dark:text-zinc-400">Items</th>
                   <th className="px-4 py-3 text-right font-medium text-zinc-500 dark:text-zinc-400">Disc %</th>
                   <th className="px-4 py-3 text-right font-medium text-zinc-500 dark:text-zinc-400">Total</th>
@@ -447,15 +460,38 @@ export default function SalesPage() {
                 {/* Cart */}
                 <div className="lg:col-span-2">
                   <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
-                    Customer
+                    Patient
                   </label>
-                  <input
-                    type="text"
-                    placeholder="Customer name (optional)"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="mb-3 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
-                  />
+                  <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Phone"
+                      value={customerPhone}
+                      onChange={(e) => setCustomerPhone(e.target.value)}
+                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Address"
+                      value={customerAddress}
+                      onChange={(e) => setCustomerAddress(e.target.value)}
+                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Age"
+                      value={customerAge}
+                      onChange={(e) => setCustomerAge(e.target.value)}
+                      className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                    />
+                  </div>
 
                   <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
                     Items
@@ -548,29 +584,6 @@ export default function SalesPage() {
                           <span>− Rs. {editDiscountAmount.toFixed(2)}</span>
                         </div>
                       )}
-                      <div className="flex items-center justify-between gap-2">
-                        <label className="text-sm text-zinc-600 dark:text-zinc-400">
-                          Extra Discount
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-zinc-500">Rs.</span>
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="0"
-                            value={editExtraDiscount}
-                            onChange={(e) => setEditExtraDiscount(e.target.value)}
-                            className="w-24 rounded border border-zinc-300 px-2 py-1 text-right text-sm text-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
-                          />
-                        </div>
-                      </div>
-                      {editExtra > 0 && (
-                        <div className="flex items-center justify-between text-sm text-red-600 dark:text-red-400">
-                          <span>Extra Discount</span>
-                          <span>− Rs. {editExtra.toFixed(2)}</span>
-                        </div>
-                      )}
                       <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-zinc-800">
                         <span className="font-bold text-zinc-900 dark:text-zinc-50">
                           Total
@@ -579,6 +592,29 @@ export default function SalesPage() {
                           Rs. {cartTotal.toFixed(2)}
                         </span>
                       </div>
+                      <div className="flex items-center justify-between gap-2 pt-2">
+                        <label className="text-sm text-zinc-600 dark:text-zinc-400">
+                          Customer Pay
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-zinc-500">Rs.</span>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="full"
+                            value={editCustomerPay}
+                            onChange={(e) => setEditCustomerPay(e.target.value)}
+                            className="w-24 rounded border border-zinc-300 px-2 py-1 text-right text-sm text-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+                          />
+                        </div>
+                      </div>
+                      {editPayNum != null && editBalance > 0 && (
+                        <div className="flex items-center justify-between text-sm text-orange-600 dark:text-orange-400">
+                          <span>Balance Due</span>
+                          <span>Rs. {editBalance.toFixed(2)}</span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

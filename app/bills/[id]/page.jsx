@@ -109,9 +109,33 @@ export default function BillDetailPage() {
             </p>
             {bill.customerName && (
               <p className="text-zinc-500 dark:text-zinc-400 print:text-gray-500">
-                Customer:{" "}
+                Name:{" "}
                 <span className="font-medium text-zinc-900 dark:text-zinc-50 print:text-black">
                   {bill.customerName}
+                </span>
+              </p>
+            )}
+            {bill.customerAddress && (
+              <p className="text-zinc-500 dark:text-zinc-400 print:text-gray-500">
+                Address:{" "}
+                <span className="font-medium text-zinc-900 dark:text-zinc-50 print:text-black">
+                  {bill.customerAddress}
+                </span>
+              </p>
+            )}
+            {bill.customerAge && (
+              <p className="text-zinc-500 dark:text-zinc-400 print:text-gray-500">
+                Age:{" "}
+                <span className="font-medium text-zinc-900 dark:text-zinc-50 print:text-black">
+                  {bill.customerAge}
+                </span>
+              </p>
+            )}
+            {bill.customerPhone && (
+              <p className="text-zinc-500 dark:text-zinc-400 print:text-gray-500">
+                Phone:{" "}
+                <span className="font-medium text-zinc-900 dark:text-zinc-50 print:text-black">
+                  {bill.customerPhone}
                 </span>
               </p>
             )}
@@ -185,23 +209,17 @@ export default function BillDetailPage() {
         {/* Total */}
         <div className="flex justify-end border-t-2 border-zinc-300 pt-3 dark:border-zinc-600 print:border-black print:pt-2">
           <div className="text-right space-y-1 min-w-[200px]">
-            {((bill.discountPercent ?? 0) > 0 || (bill.extraDiscount ?? 0) > 0) && (
-              <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
-                <span>Subtotal:</span>
-                <span>Rs. {(bill.subtotal ?? bill.totalAmount).toFixed(2)}</span>
-              </div>
-            )}
             {(bill.discountPercent ?? 0) > 0 && (
-              <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
-                <span>Discount ({bill.discountPercent}%):</span>
-                <span>− Rs. {(bill.discountAmount ?? 0).toFixed(2)}</span>
-              </div>
-            )}
-            {(bill.extraDiscount ?? 0) > 0 && (
-              <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
-                <span>Extra Discount:</span>
-                <span>− Rs. {bill.extraDiscount.toFixed(2)}</span>
-              </div>
+              <>
+                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
+                  <span>Subtotal:</span>
+                  <span>Rs. {(bill.subtotal ?? bill.totalAmount).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
+                  <span>Discount ({bill.discountPercent}%):</span>
+                  <span>− Rs. {(bill.discountAmount ?? 0).toFixed(2)}</span>
+                </div>
+              </>
             )}
             <div className="flex justify-between border-t border-zinc-300 pt-1 dark:border-zinc-600 print:border-black">
               <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50 print:text-black">
@@ -211,6 +229,20 @@ export default function BillDetailPage() {
                 Rs. {bill.totalAmount.toFixed(2)}
               </span>
             </div>
+            {bill.customerPay != null && (
+              <>
+                <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400 print:text-gray-700">
+                  <span>Paid:</span>
+                  <span>Rs. {Number(bill.customerPay).toFixed(2)}</span>
+                </div>
+                {+(bill.totalAmount - bill.customerPay).toFixed(2) > 0 && (
+                  <div className="flex justify-between text-sm font-semibold text-orange-700 dark:text-orange-400 print:text-black">
+                    <span>Balance Due:</span>
+                    <span>Rs. {(bill.totalAmount - bill.customerPay).toFixed(2)}</span>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
 
