@@ -19,15 +19,20 @@ export default function Nav() {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
+    if (["/login", "/signup"].includes(pathname)) return;
     let cancelled = false;
     fetch("/api/auth/me")
       .then((r) => (r.ok ? r.json() : null))
-      .then((data) => !cancelled && data && setUser(data.user))
+      .then((data) => {
+        if (cancelled) return;
+        if (data) setUser(data.user);
+        else setUser(null);
+      })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     setMenuOpen(false);

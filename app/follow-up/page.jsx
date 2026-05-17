@@ -37,6 +37,11 @@ export default function FollowUpPage() {
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [filterDate, setFilterDate] = useState(toInputDate(new Date()));
+
+  const filteredItems = filterDate
+    ? items.filter((it) => toInputDate(new Date(it.date)) === filterDate)
+    : items;
 
   function fetchItems() {
     fetch("/api/followups")
@@ -150,7 +155,12 @@ export default function FollowUpPage() {
               Follow Up Register
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-              {items.length} entr{items.length !== 1 ? "ies" : "y"}
+              {filteredItems.length} entr{filteredItems.length !== 1 ? "ies" : "y"}
+              {filterDate && (
+                <span className="ml-1">
+                  on {formatBs(new Date(filterDate))} ({DAY_NAMES[new Date(filterDate).getDay()]})
+                </span>
+              )}
             </p>
           </div>
           <button
@@ -161,10 +171,39 @@ export default function FollowUpPage() {
           </button>
         </div>
 
+        {/* Filter */}
+        <div className="mb-4 flex flex-wrap items-end gap-3 rounded-xl border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900">
+          <div>
+            <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+              Filter by date
+            </label>
+            <input
+              type="date"
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setFilterDate(toInputDate(new Date()))}
+            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            Today
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterDate("")}
+            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            All
+          </button>
+        </div>
+
         {/* List */}
-        {items.length === 0 ? (
+        {filteredItems.length === 0 ? (
           <div className="rounded-xl border border-zinc-200 bg-white px-4 py-8 text-center text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900">
-            No entries yet
+            {items.length === 0 ? "No entries yet" : "No entries for selected date"}
           </div>
         ) : (
           <div className="hidden md:block rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 overflow-x-auto">
@@ -188,7 +227,7 @@ export default function FollowUpPage() {
                 </tr>
               </thead>
               <tbody>
-                {items.map((it) => {
+                {filteredItems.map((it) => {
                   const d = new Date(it.date);
                   return (
                     <tr key={it._id} className="border-b border-zinc-100 last:border-0 dark:border-zinc-800 align-top">
@@ -232,9 +271,9 @@ export default function FollowUpPage() {
         )}
 
         {/* Mobile cards */}
-        {items.length > 0 && (
+        {filteredItems.length > 0 && (
           <div className="space-y-3 md:hidden">
-            {items.map((it) => {
+            {filteredItems.map((it) => {
               const d = new Date(it.date);
               return (
                 <div key={it._id} className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
